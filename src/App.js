@@ -6,7 +6,9 @@ import "./styles.css";
 
 function App() {
   const [repositories, setRepositories] = useState([]);
-  useEffect(getRepositories, [])
+  useEffect (() => {
+    getRepositories();
+  }, []);
 
   async function getRepositories() {
     try {
@@ -51,7 +53,7 @@ function App() {
     <div>
       <ul data-testid="repository-list">
         {repositories.map(repository => (
-          <li>
+          <li key={repository.id}>
             {repository.title}
             <button onClick={() => handleRemoveRepository(repository.id)}>
               Remover
