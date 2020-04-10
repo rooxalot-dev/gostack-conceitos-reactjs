@@ -6,13 +6,13 @@ import "./styles.css";
 
 function App() {
   const [repositories, setRepositories] = useState([]);
-  useEffect (() => {
-    getRepositories();
+  useEffect (() => { 
+    getRepositories(); 
   }, []);
 
   async function getRepositories() {
     try {
-      const { data } = await api.get('/repositories');
+      const { data } = await api.get('repositories');
       setRepositories(data);
     } catch (error) {
       console.log('There was a error while fetching the repositories', error.message);
@@ -21,29 +21,26 @@ function App() {
 
   async function handleAddRepository() {
     try {
-      const { status } = await api.post(`/repositories/`, {
+      const { data } = await api.post(`repositories`, {
         title: `Repositório de teste | ${new Date().toISOString()}`,
         url: 'https://github.com/Rocketseat/bootcamp-gostack-desafios/tree/master/desafio-conceitos-reactjs',
         techs: ['NodeJS', 'ReactJS', 'React Native']
       });
-      if (status !== 201) {
-        console.log('There was a error while creating the repository');
-      }
 
-      await getRepositories();
+      setRepositories([...repositories, data]);
     } catch (error) {
-      console.log('There was a error while creating the repository', error.message);
+      console.log('There was a error while creating the repository', error);
     }
   }
 
   async function handleRemoveRepository(id) {
     try {
-      const { status } = await api.delete(`/repositories/${id}`);
+      const { status } = await api.delete(`repositories/${id}`);
       if (status !== 204) {
         console.log(`There was a error while deleting the repository with id ${id}`);  
       }
 
-      await getRepositories();
+      setRepositories(repositories.filter(repository => repository.id !== id));
     } catch (error) {
       console.log(`There was a error while deleting the repository with id ${id}`, error.message);
     }
